@@ -8,8 +8,8 @@ import tensorflow as tf
 import math
 
 # Create noisy data
-x_data = np.linspace(-10, 10, num=1000)
-y_data = 0.1*x_data*np.cos(x_data) + 0.1*np.random.normal(size=1000)
+x_data = np.linspace(-10, 10, num=10000)
+y_data = 0.1*x_data*np.cos(x_data) + 0.1*np.random.normal(size=10000)
 print('Data created successfully')
 
 ## Plotting data
@@ -20,8 +20,12 @@ print('Data created successfully')
 # Create the model 
 model = keras.Sequential()                                                              # groups a linear stack of layers into a model 
 model.add(keras.layers.Dense(units = 1, activation = 'linear', input_shape=[1]))        # add one layer to the model (input layer), with only one neuron and no activation function -- why input shape 1
-model.add(keras.layers.Dense(units = 64, activation = 'relu'))                          # add a dense layer with 64 neuros and ReLu nonlinear activation function 
-model.add(keras.layers.Dense(units = 64, activation = 'relu'))                          # ^
+model.add(keras.layers.Dense(units = 128, activation = 'relu'))   
+model.add(keras.layers.Dense(units = 128, activation = 'relu'))      
+model.add(keras.layers.Dense(units = 128, activation = 'relu'))      
+model.add(keras.layers.Dense(units = 128, activation = 'relu'))      
+model.add(keras.layers.Dense(units = 128, activation = 'relu'))      
+model.add(keras.layers.Dense(units = 128, activation = 'relu'))                           
 model.add(keras.layers.Dense(units = 1, activation = 'linear'))                         # same as for input but for output
 model.compile(loss='mse', optimizer="adam")                                             # Configures the model for training -- mean square error used as loss & adam used as optimization method
 
@@ -50,7 +54,7 @@ Non-trainable params: 0 (0.00 Byte)
 """
 
 # Training
-model.fit( x_data, y_data, epochs=100, verbose=1)                   # Trains the model for a fixed number of epochs  (verbose=1 sets a progrss bar for the training)
+history = model.fit( x_data, y_data, epochs=100, verbose=0, validation_split=0.1)                   # Trains the model for a fixed number of epochs  (verbose=1 sets a progrss bar for the training)
 
 
 # Compute the output 
@@ -60,5 +64,14 @@ y_predicted = model.predict(x_data)
 plt.scatter(x_data, y_data)
 plt.plot(x_data, y_predicted, 'r', linewidth=4)
 plt.grid()
+plt.show()
+
+# summarize history for loss
+plt.plot(history.history['loss'])
+plt.plot(history.history['val_loss'])
+plt.title('model loss')
+plt.ylabel('loss')
+plt.xlabel('epoch')
+plt.legend(['train', 'test'], loc='upper left')
 plt.show()
 
