@@ -7,6 +7,7 @@ from tensorflow import keras                    # keras is an API -- also availb
 import tensorflow as tf
 import math
 
+
 # Create noisy data
 x_data = np.linspace(-10, 10, num=1000)
 y_data = 0.1*x_data*np.cos(x_data) + 0.1*np.random.normal(size=1000)
@@ -77,3 +78,19 @@ plt.xlabel('epoch')
 plt.legend(['train', 'test'], loc='upper left')
 plt.show()
 
+visualkeras.layered_view(model, to_file='NN.png') 
+
+
+'''
+
+Some comments: 
+
+- Setting up a NN using keras is extremely easy.
+
+- I was banging my head against the wall for a while because the NN was performing a poor fit in the last part of the data. 
+Then I realised that I had been using 'validation_split' in the model.fit() function, and was essentially separating my data into training and validation, but in the wrong way, because then
+I was not yet generating separate validation data, so what I was doing was: let' say I had validation_split = 0.2 => 0.8 first entries of my data I trained with and then used the last 0.2
+as validation where I tried to predict them. The thing is my NN hadnt even been trained in that part of the data, so it is normal it was performing terribly. Then I fixed this by separating 
+validation from training data and using validation_data = tuple, instead of validation_split. 
+
+'''
