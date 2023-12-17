@@ -8,9 +8,14 @@ import tensorflow as tf
 import math
 
 # Create noisy data
-x_data = np.linspace(-10, 10, num=10000)
-y_data = 0.1*x_data*np.cos(x_data) + 0.1*np.random.normal(size=10000)
+x_data = np.linspace(-10, 10, num=1000)
+y_data = 0.1*x_data*np.cos(x_data) + 0.1*np.random.normal(size=1000)
 print('Data created successfully')
+
+
+# Validation data
+x_vali = np.linspace(-10, 10, num=100)
+y_vali = 0.1*x_vali*np.cos(x_vali) + 0.1*np.random.normal(size=100)
 
 ## Plotting data
 # plt.figure()
@@ -20,12 +25,8 @@ print('Data created successfully')
 # Create the model 
 model = keras.Sequential()                                                              # groups a linear stack of layers into a model 
 model.add(keras.layers.Dense(units = 1, activation = 'linear', input_shape=[1]))        # add one layer to the model (input layer), with only one neuron and no activation function -- why input shape 1
-model.add(keras.layers.Dense(units = 128, activation = 'relu'))   
-model.add(keras.layers.Dense(units = 128, activation = 'relu'))      
-model.add(keras.layers.Dense(units = 128, activation = 'relu'))      
-model.add(keras.layers.Dense(units = 128, activation = 'relu'))      
-model.add(keras.layers.Dense(units = 128, activation = 'relu'))      
-model.add(keras.layers.Dense(units = 128, activation = 'relu'))                           
+model.add(keras.layers.Dense(units = 32, activation = 'relu'))   
+model.add(keras.layers.Dense(units = 32, activation = 'relu'))                                
 model.add(keras.layers.Dense(units = 1, activation = 'linear'))                         # same as for input but for output
 model.compile(loss='mse', optimizer="adam")                                             # Configures the model for training -- mean square error used as loss & adam used as optimization method
 
@@ -41,20 +42,21 @@ _________________________________________________________________
 =================================================================
  dense (Dense)               (None, 1)                 2
 
- dense_1 (Dense)             (None, 64)                128
+ dense_1 (Dense)             (None, 32)                64
 
- dense_2 (Dense)             (None, 64)                4160
+ dense_2 (Dense)             (None, 32)                1056
 
- dense_3 (Dense)             (None, 1)                 65
+ dense_3 (Dense)             (None, 1)                 33
 
 =================================================================
-Total params: 4355 (17.01 KB)
-Trainable params: 4355 (17.01 KB)
+Total params: 1155 (4.51 KB)
+Trainable params: 1155 (4.51 KB)
 Non-trainable params: 0 (0.00 Byte)
+
 """
 
-# Training
-history = model.fit( x_data, y_data, epochs=100, verbose=0, validation_split=0.1)                   # Trains the model for a fixed number of epochs  (verbose=1 sets a progrss bar for the training)
+# Training 
+history = model.fit( x_data, y_data, epochs=100, verbose=0, validation_data=(x_vali, y_vali))                   # Trains the model for a fixed number of epochs  (verbose=1 sets a progrss bar for the training)
 
 
 # Compute the output 
