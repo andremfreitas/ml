@@ -1,4 +1,4 @@
-# Machine learning small tasks for learning
+# Machine learning exercises/projects
 
 Archive for exercises/projects performed as I learn ML/DL.
 *  Curve fitting
