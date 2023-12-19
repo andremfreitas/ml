@@ -6,15 +6,17 @@ logging.disable(logging.WARNING)
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 from tensorflow import keras
 import tensorflow as tf
+from tensorflow.keras.layers import Dense, Flatten, Conv2D
+from tensorflow.keras import Model
 
 # Define a new class called 'CustomModel' which inherits from tf.keras.Model 
-class CustomModel(tf.keras.Model):
+class CustomModel(Model):
     def __init__(self):
-        super(CustomModel, self).__init__()                                 # Initialize the base class (tf.keras.Model)
-        self.layer1 = keras.layers.Dense(units=1, activation='linear')      # Input layer with 1 unit and linear activation
-        self.layer2 = keras.layers.Dense(units=16, activation='relu')       # Second dense layer with 16 units and ReLU activation
-        self.layer3 = keras.layers.Dense(units=16, activation='relu')       # Third dense layer with 16 units and ReLU activation
-        self.layer4 = keras.layers.Dense(units=1, activation='linear')      # Output layer with 1 unit and linear activation
+        super(CustomModel, self).__init__()                    # Initialize the base class (tf.keras.Model)
+        self.layer1 = Dense(units=1, activation='linear')      # Input layer with 1 unit and linear activation
+        self.layer2 = Dense(units=16, activation='relu')       # Second dense layer with 16 units and ReLU activation
+        self.layer3 = Dense(units=16, activation='relu')       # Third dense layer with 16 units and ReLU activation
+        self.layer4 = Dense(units=1, activation='linear')      # Output layer with 1 unit and linear activation
 
     def call(self, inputs):
         x = self.layer1(inputs)     # Forward pass through the first layer
