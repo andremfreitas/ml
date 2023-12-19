@@ -18,7 +18,7 @@ where $\epsilon$ is normally distributed (with $\mu$ = 0 and $\sigma$ = 1). We t
 **Libraries needed**: numPy, tensorflow, matplotlib.
 
 Code:
-* 'fit.py' is the *begginer* version of the implementation curve fitting using tensorflow. Less user control and a more black-box like approach.
-* 'expert_fit.py' is the more *advanced* version, where we use 'tf.GradientTape()', define our model as a class that inherits from tf.keras.Model, among other things.
+* `fit.py` is the *begginer* version of the implementation curve fitting using tensorflow. Less user control and a more black-box like approach.
+* `expert_fit.py` is the more *advanced* version, where we use `tf.GradientTape()`, define our model as a class that inherits from `tf.keras.Model`, among other things.
 
 
