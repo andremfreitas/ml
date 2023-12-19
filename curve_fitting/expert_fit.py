@@ -56,7 +56,7 @@ def train_step(x, y):
     return loss
 
 # Training loop
-epochs = 1000
+epochs = 1500
 train_losses = []
 val_losses = []
 
@@ -71,7 +71,7 @@ for epoch in range(epochs):
 # Deploy the model on validation data
 y_predicted = model.predict(x_vali_r)
 
-# Display the result
+# Display the result            
 plt.scatter(x_data_r, y_data_r)
 plt.plot(x_vali_r, y_predicted, 'r', linewidth=4)
 plt.grid()
