@@ -25,6 +25,9 @@ class CustomModel(Model):
         return self.layer4(x)       # Output of the model after passing through the fourth layer
 
 
+# Fix random seed
+np.random.seed(0)
+
 # Create noisy data
 x_data = np.linspace(-10, 10, num=1000)
 y_data = 0.1 * x_data * np.cos(x_data) + 0.1 * np.random.normal(size=1000)

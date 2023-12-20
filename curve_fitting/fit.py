@@ -5,7 +5,7 @@ logging.disable(logging.WARNING)                # Disables the warnings from ten
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"        # same ^
 from tensorflow import keras                    # keras is an API -- also availble in other DL frameworks such as PyTorch and JAX. Very useful to easily create DNNs
 import tensorflow as tf
-import math
+
 
 
 # Create noisy data
@@ -22,6 +22,9 @@ y_vali = 0.1*x_vali*np.cos(x_vali) + 0.1*np.random.normal(size=100)
 # plt.figure()
 # plt.scatter(x_data, y_data)
 # plt.show()
+
+# Fix random seed
+np.random.seed(0)
 
 # Create the model 
 model = keras.Sequential()                                                              # groups a linear stack of layers into a model 
@@ -61,11 +64,11 @@ history = model.fit( x_data, y_data, epochs=100, verbose=0, validation_data=(x_v
 
 
 # Compute the output 
-y_predicted = model.predict(x_data)
+y_predicted = model.predict(x_vali)
 
 # Display the result
 plt.scatter(x_data, y_data)
-plt.plot(x_data, y_predicted, 'r', linewidth=4)
+plt.plot(x_vali, y_predicted, 'r', linewidth=4)
 plt.grid()
 plt.show()
 
@@ -78,7 +81,7 @@ plt.xlabel('epoch')
 plt.legend(['train', 'test'], loc='upper left')
 plt.show()
 
-visualkeras.layered_view(model, to_file='NN.png') 
+
 
 
 '''
