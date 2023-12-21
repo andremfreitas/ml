@@ -2,6 +2,7 @@
 
 Archive for exercises/projects performed as I learn ML/DL.
 *  Curve fitting
+*  Learning the equations of motion / Trajectory prediction
 
 ## Curve fitting
 
@@ -24,6 +25,6 @@ Code:
 
 ## Learning the equations of motion
 
-Here, the goal is to use the NN as a predictor. Based on the current state, the goal of the NN is to predict the following states (evolve in time). The problem chosen is the evolution of a trajectory in time in a 2D physical space. The NN has as input at time $t$ [x, y, vx, vy] and needs to predict [x, y, vx, vy] $t$ + $\delta t$ ($\mathbb{R}^4$ $\to$ $\mathbb{R}^4$) . For this, trajectory data is generated using random ICs. The NN learns from this data. The loss function used is the mean of the rollout of the squared pointwise error. The performance of the NN is tested on unseen ICs.
+Here, the goal is to use the NN as a predictor. Based on the current state, the goal of the NN is to predict the following states (evolve in time). The problem chosen is the evolution of a trajectory in time in a 2D physical space. The NN has as input at time $t$ [x, y, vx, vy] and needs to predict [x, y, vx, vy] at time $t$ + $\delta t$. Essentially we build a deep NN that does the following mapping: $\mathbb{R}^4$ $\to$ $\mathbb{R}^4$. For this, trajectory data is generated using random ICs. The NN learns from this data. The loss function used is the mean of the rollout of the squared pointwise error. The performance of the NN is tested on unseen ICs.
 
 
