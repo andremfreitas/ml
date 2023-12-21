@@ -22,3 +22,8 @@ Code:
 * `expert_fit.py` is the more *advanced* version, where we use `tf.GradientTape()`, define our model as a class that inherits from `tf.keras.Model`, among other things.
 
 
+## Learning the equations of motion
+
+Here, the goal is to use the NN as a predictor. Based on the current state, the goal of the NN is to predict the following states (evolve in time). The problem chosen is the evolution of a trajectory in time in a 2D physical space. The NN has as input at time $t$ [x, y, vx, vy] and needs to predict [x, y, vx, vy] $t$ + $\delta t$ ($\mathbb{R}^4$ $\to$ $\mathbb{R}^4$) . For this, trajectory data is generated using random ICs. The NN learns from this data. The loss function used is the mean of the rollout of the squared pointwise error. The performance of the NN is tested on unseen ICs.
+
+
