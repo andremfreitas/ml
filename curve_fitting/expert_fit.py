@@ -9,6 +9,10 @@ import tensorflow as tf
 from tensorflow.keras.layers import Dense, Flatten, Conv2D
 from tensorflow.keras import Model
 
+# Fix random seed
+np.random.seed(1)
+tf.random.set_seed(1)
+
 # Define a new class called 'CustomModel' which inherits from tf.keras.Model 
 class CustomModel(Model):
     def __init__(self):
@@ -24,9 +28,6 @@ class CustomModel(Model):
         x = self.layer3(x)          # Forward pass through the third layer
         return self.layer4(x)       # Output of the model after passing through the fourth layer
 
-
-# Fix random seed
-np.random.seed(0)
 
 # Create noisy data
 x_data = np.linspace(-10, 10, num=1000)
