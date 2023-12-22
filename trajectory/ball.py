@@ -43,6 +43,8 @@ def calculate_next_state(current_state, dt):
 # Generate or load training data
 data_file = 'trajectory_data.npz'
 
+np.random.seed(0)
+
 try:
     # Try loading existing data
     data = np.load(data_file)
@@ -50,8 +52,8 @@ try:
 except FileNotFoundError:
     print(f'{data_file} not found, creating new data.')
     # Generate new data if not found
-    num_trajectories = 1000                                        
-    trajectory_length = 100
+    num_trajectories = 1024                                        
+    trajectory_length = 50
     dt = 0.1
 
     training_data = []
@@ -85,9 +87,9 @@ targets = tf.convert_to_tensor(targets, dtype=tf.float32)
 
 # Create and train the model
 model = BallTrajectoryModel()
-optimizer = tf.optimizers.Adam()  # possible arg: learning_rate=0.001
+optimizer = tf.optimizers.Adam(learning_rate=0.001)  # possible arg: learning_rate=0.001
 
-num_epochs = 50
+num_epochs = 240
 batch_size = 32
 
 losses = []  # To store loss for plotting
@@ -108,16 +110,18 @@ plt.xlabel('Epoch')
 plt.ylabel('Loss')
 plt.title('Training Loss Over Epochs')
 plt.legend()
-plt.savefig('loss.png')
+plt.savefig('loss3.png')
 
 # Test the model by making predictions on a few trajectories
 num_test_trajectories = 10
-test_trajectory_length = 100
+test_trajectory_length = 50
 dt = 0.1
 
 # Define a directory to save the figures
-save_dir = 'figures'
+save_dir = 'figures_3'
 os.makedirs(save_dir, exist_ok=True)
+
+np.random.seed(1)
 
 for i in range(num_test_trajectories):
     initial_state = np.random.rand(4) * 10.0
@@ -129,7 +133,6 @@ for i in range(num_test_trajectories):
         test_trajectory_states.append(next_state)
 
     test_inputs = tf.convert_to_tensor(test_trajectory_states[:-1], dtype=tf.float32)
-    test_targets = tf.convert_to_tensor(test_trajectory_states[1:], dtype=tf.float32)
 
     # Make predictions using the trained model
     predictions = model(test_inputs)
