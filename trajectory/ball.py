@@ -9,8 +9,7 @@ from tensorflow.keras import layers
 
 
 '''
-FCNN learns equations of motion (essentially a very simple ODE).
-NN acts as a predictor.
+FCNN learns equations of motion.
 Predicts 50 time steps based on ICs. The problem considered is 2D so the 
  states considered are position in x and y and velocity in x and y. The NN evolves these
  initial states in time. 
