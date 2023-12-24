@@ -6,6 +6,16 @@ os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 import tensorflow as tf
 from tensorflow.keras import layers
 
+
+
+'''
+FCNN learns equations of motion (essentially a very simple ODE).
+NN acts as a predictor.
+Predicts 50 time steps based on ICs. The problem considered is 2D so the 
+ states considered are position in x and y and velocity in x and y. The NN evolves these
+ initial states in time. 
+'''
+
 class BallTrajectoryModel(tf.Module):
     def __init__(self):
         self.dense_input = layers.Dense(4, activation = 'linear')
@@ -43,6 +53,7 @@ def calculate_next_state(current_state, dt):
 # Generate or load training data
 data_file = 'trajectory_data.npz'
 
+# Set one random seed for training
 np.random.seed(0)
 
 try:
@@ -121,6 +132,7 @@ dt = 0.1
 save_dir = 'figures_3'
 os.makedirs(save_dir, exist_ok=True)
 
+# Set a different seed from training
 np.random.seed(1)
 
 for i in range(num_test_trajectories):
@@ -137,7 +149,7 @@ for i in range(num_test_trajectories):
     # Make predictions using the trained model
     predictions = model(test_inputs)
 
-    # Plot the testing trajectory and neural network predictions
+    # Plot the testing trajectory and NN predictions
     plt.figure()
     true_trajectory_states = np.array(test_trajectory_states)
     plt.plot(true_trajectory_states[:, 0], true_trajectory_states[:, 1], label='True Trajectory', marker='o')
@@ -147,7 +159,6 @@ for i in range(num_test_trajectories):
     plt.ylabel('Y')
     plt.legend()
 
-    # Save the figure with a unique name based on the iteration
     fig_name = f'figure_{i+1}.png'
     fig_path = os.path.join(save_dir, fig_name)
     plt.savefig(fig_path)
