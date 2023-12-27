@@ -19,15 +19,17 @@ opt = Adam()
 
 # Function to calculate the next state based on classical mechanics equations
 function calculate_next_state(current_state, dt)
+    if length(current_state) != 4
+        throw(ArgumentError("current_state must have four elements"))
+    end
     g = 9.8
-    x, y, vx, vy = current_state
+    x, y, vx, vy = current_state  ### error tracked down to this line
     new_x = x + vx * dt
     new_y = y + vy * dt
     new_vx = vx
     new_vy = vy - g * dt
     return [new_x, new_y, new_vx, new_vy]
 end
-
 
 # Generate or load training data
 data_file = "trajectory_data.jld2"
@@ -36,7 +38,7 @@ function generate_or_load_data(data_file)
     if isfile(data_file)
         # Load existing data
         data = JLD2.load(data_file)
-        inputs, targets = data["inputs"], data["targets"]
+        trajectories = data["trajectories"]
     else
         println("$data_file not found, creating new data.")
         # Generate new data
@@ -44,34 +46,35 @@ function generate_or_load_data(data_file)
         trajectory_length = 50
         dt = 0.1
 
-        training_data = []
-        target_data = []
+        # Initialize array for trajectories
+        trajectories = zeros(num_trajectories, trajectory_length, 4)  # num_trajectories -- rows; trajectory_length -- columns; 4 -- depth
 
-        for _ in 1:num_trajectories
-            initial_state = rand(4) * 10.0
-            trajectory_states = [initial_state]
+        for i in 1:num_trajectories
+            # Random initial conditions for each trajectory
+            initial_conditions = rand(4)*10
 
-            for _ in 1:trajectory_length
-                current_state = trajectory_states[end]
-                next_state = calculate_next_state(current_state, dt)
-                push!(trajectory_states, next_state)
+            for j in 1:trajectory_length
+                # Fill in trajectory matrix with the entire trajectory
+                trajectories[i, j, :] = initial_conditions
+
+                # Calculate next state using your provided function
+                initial_conditions = calculate_next_state(initial_conditions, dt)
             end
-
-            append!(training_data, trajectory_states[1:end-1])
-            append!(target_data, trajectory_states[2:end])
         end
 
-        inputs = [Float32.(training_data[i]) for i in eachindex(training_data)]
-        targets = [Float32.(target_data[i]) for i in eachindex(target_data)]
-
-
-        # Save the generated data
-        JLD2.save(data_file, "inputs", inputs, "targets", targets)
+        JLD2.save(data_file, "trajectories", trajectories)
         println("Finished creating data")
     end
+
+    # Extract inputs and targets from the trajectories
+    inputs = reshape(trajectories[:, 1, :], :, 4)
+    targets = trajectories[:, 2:end, :]
+
     return inputs, targets
 end
 
-
 inputs, targets  = generate_or_load_data(data_file)
+
+println(size(inputs))
+println(size(targets))
 
