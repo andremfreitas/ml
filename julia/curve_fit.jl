@@ -1,5 +1,5 @@
 using Flux, Flux.Optimise
-using Flux: train!, Dense, relu, identity, Chain, Adam
+using Flux: train!, Dense, relu, identity, Chain, Adam, params, mse
 using Statistics
 using Plots
 using Random
@@ -17,34 +17,8 @@ y_data = f(x_data, eps)
 
 plot(x_data, y_data)
 
-# Reshape x_data and y_data to have the required dimensions
-x_data = reshape(x_data, 1, 1000)
-y_data = reshape(y_data, 1, 1000)
 
 # savefig("function.png")
-
-# struct CustomModel
-#     layer1::Dense
-#     layer2::Dense
-#     layer3::Dense
-#     layer4::Dense
-# end
-
-# function CustomModel()
-#     layer1 = Dense(1, 1, identity)
-#     layer2 = Dense(1, 16, relu)
-#     layer3 = Dense(16, 16, relu)
-#     layer4 = Desne(16, 1, identity)
-
-#     return CustomModel(layer1, layer2, layer3, layer4)
-# end
-
-# function(m::CustomModel)(inputs)
-#     x = m.layer1(inputs)
-#     x = m.layer2(x)
-#     x = m.layer3(x)
-#     return m.layer4(x)
-# end
 
 m = Chain(
     Dense(1, 1, identity),
@@ -53,29 +27,35 @@ m = Chain(
     Dense(16, 1, identity)
 )
 
-loss(x, y) = mean((m(x) - y)^2)
+loss(x, y) = mse(m(x), y)
 opt = Adam()
 
 epochs = 10
 
 
+# Define the data as Flux's data type
+x_data = reshape(x_data, 1, :) 
+y_data = reshape(y_data, 1, :) 
+
+# Convert the input data to Float32
+x_data = Float32.(x_data)
+
 # Training loop
-epochs = 10
-
-losses = Float64[]
-
 for epoch in 1:epochs
-    println("Epoch $epoch")
-    
-    # Compute gradients and update parameters
-    Flux.train!(loss, Flux.params(m), [(x_data, y_data)], opt)
-    
-    # Evaluate and store the loss
-    current_loss = loss(x_data, y_data)
-    push!(losses, current_loss)
-    
-    println("Loss: $current_loss")
+    println("Epoch: $epoch")
+
+    # Shuffle the data
+    data = [(x_data[:, i], y_data[:, i]) for i in randperm(size(x_data, 2))]
+
+    # Mini-batch SGD
+    for (x, y) in data
+        gs = gradient(params(m)) do
+            l = loss(x, y)
+        end
+        Flux.Optimise.update!(opt, params(m), gs)
+    end
+
+    # Print the current loss
+    println("Loss: ", loss(x_data, y_data))
 end
 
-# Plot the loss function versus epochs
-plot(losses, xlabel="Epoch", ylabel="Loss", label="Training Loss", legend=:bottomright)
