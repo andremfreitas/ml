@@ -31,7 +31,6 @@ m = Chain(
 loss(x, y) = mse(m(x), y)
 opt = Adam()
 
-
 # Define the data as Flux's data type
 x_data = reshape(x_data, 1, :) 
 y_data = reshape(y_data, 1, :) 
@@ -80,3 +79,15 @@ end
 plot(1:epochs, train_losses, label="Training Loss", xlabel="Epochs", ylabel="Loss", legend=:topright)
 plot!(1:epochs, val_losses, label="Validation Loss")
 savefig("loss_fit.png")
+
+# Reshape data to be able to plot it correctly
+prediction = m(x_vali)
+x_vali = reshape(x_vali, :) 
+y_vali = reshape(y_vali, :) 
+prediction = reshape(prediction, :)
+
+# Plotting prediction of NN in testing data
+plot(x_vali, prediction, color=:blue, xlabel="x", ylabel="y", label="NN prediction", lw=3, legend=:topright)
+plot!(x_vali, y_vali, seriestype=:scatter, mc=:red, ms=2, ma=0.5, label="Validation data")
+savefig("validation.png")
+
