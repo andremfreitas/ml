@@ -1,5 +1,5 @@
 using Flux, Flux.Optimise
-using Flux: train!, Dense, relu, identity, Chain, Adam, params
+using Flux: train!, Dense, relu, identity, Chain, Adam, params, mse
 using Statistics
 using Plots
 using Random
@@ -14,7 +14,7 @@ m = Chain(
     Dense(64, 4, identity),
 )
 
-loss(m, x, y) = mse(m(x), y)    # In julia we can define functions like this
+loss(x, y) = mse(m(x), y)    # In julia we can define functions like this
 opt = Adam()
 
 # Function to calculate the next state based on classical mechanics equations
@@ -75,6 +75,11 @@ end
 
 inputs, targets  = generate_or_load_data(data_file)
 
+# Convert to Float32
+inputs = Float32.(inputs)
+targets = Float32.(targets)
+
 println(size(inputs))
 println(size(targets))
+
 
