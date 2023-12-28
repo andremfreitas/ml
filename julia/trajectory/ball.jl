@@ -14,7 +14,7 @@ m = Chain(
     Dense(64, 4, identity),
 )
 
-loss(x,y) = mse(m(x), y)
+loss(m, x, y) = mse(m(x), y)    # In julia we can define functions like this
 opt = Adam()
 
 # Function to calculate the next state based on classical mechanics equations
