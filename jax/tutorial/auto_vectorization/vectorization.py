@@ -57,4 +57,41 @@ manually_vectorized_convolve(xs,ws)
 # While such implementation is possible, it is error prone and costs time...
 # JAX offers an alternative
 
-# In JAX, the 
+# In JAX, the 'jax.vmap' transformation is desgined to generate
+# such a vectorized implementation of a function automatically:
+
+auto_batch_convolve = jax.vmap(convolve)
+
+auto_batch_convolve(xs,ws)
+
+'''
+It does this by tracing the function similarly to jax.jit, and 
+automatically adding batch axes at the beginning of each input.
+
+If the batch dimension is not the first, you may use the in_axes
+and out_axes arguments to specify the location of the batch dimension
+in inputs and outputs. These may be an integer if the batch axis is
+the same for all inputs and outputs, or lists, otherwise.
+'''
+
+auto_batch_convolve_v2 = jax.vmap(convolve, in_axes=1, out_axes=1)
+
+xst = jnp.transpose(xs)
+wst = jnp.transpose(ws)
+
+auto_batch_convolve_v2(xst, wst)
+
+
+'''
+
+Combining transformations
+------------------------- 
+
+As with all JAX transformations, 'jax.jit' and 'jax.vmap' are composable.
+Which means we can wrap a jitted function with a vmap and the other way around.
+
+'''
+
+jitted_batch_convolve = jax.jit(auto_batch_convolve)
+
+jitted_batch_convolve(xs, ws)
